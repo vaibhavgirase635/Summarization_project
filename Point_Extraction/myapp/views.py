@@ -11,12 +11,17 @@ import os
 from .models import AudioFile, Audio_File_Data
 from autocorrect import Speller
 import nltk
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+
+client_id = "1042742414542-i1k8c8vn0eebaoab42qf8tnmf58jnee8.apps.googleusercontent.com"
 
 # from transformers import pipeline
 # Create your views here.
-def main(request):
-    return render(request, 'extract.html')
+def login(request):
+    return render(request, 'login.html')
 
+@login_required
 def extract_main_points(request):
     print('function call')
     if request.method == 'POST':
@@ -61,7 +66,7 @@ def extract_main_points(request):
     return render(request, 'extract.html')
 
 
-
+@login_required
 def Extract_points_from_recordings(request):
     
     if request.method == 'POST':
@@ -70,7 +75,7 @@ def Extract_points_from_recordings(request):
         time.sleep(3)
         new_file = AudioFile(audio_file=audio_file)
         new_file.save()
-        data = Audio_File_Data(file_name=audio_file.name)
+        data = Audio_File_Data(file_name=audio_file.name, user=request.user)
         data.save()
         text = transcribe_audio(audio_file.name)
         print(text)
@@ -160,7 +165,7 @@ The most successful side playing international cricket is Australia, which has w
 
 
 # generatewav()
-
+@login_required
 def Extract_points_from_meetings(request):
     if request.method == 'POST':
         text = request.POST.get('query')
@@ -221,10 +226,12 @@ def Extract_points_from_meetings(request):
     else:
         return render(request, 'extract.html')
 
+@login_required
 def all_files(request):
-    all_files = Audio_File_Data.objects.all()
+    all_files = Audio_File_Data.objects.filter(user=request.user)
     return render(request, 'all_files.html', {'all_files':all_files})
 
+@login_required
 def show_points(request, id):
     points = Audio_File_Data.objects.get(id=id)
     sentences = points.main_points
@@ -235,6 +242,7 @@ def show_points(request, id):
     print(sentences)
     return render(request, 'points.html', {'sentences':sentences})
 
+@login_required
 def delete_file(request, id):
     file = Audio_File_Data.objects.get(id=id)
     file.delete()
@@ -282,7 +290,9 @@ def auto_correct_text(text):
     return corrected_text
 
 
-
+def User_logout(request):
+    logout(request)
+    return redirect('user_login')
 
 # summarizer = pipeline('summarization')
 # article = '''Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation.[32]

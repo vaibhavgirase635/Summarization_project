@@ -11,7 +11,7 @@ const input = document.getElementById("input-file")
 console.log(submit_btn);
 
 submit_btn.addEventListener('click', ()=>{
-    var file = $('#input-file').files[0];
+    var file = input.files[0]
     console.log(file);
     if (file) {
         var url = URL.createObjectURL(file);
@@ -19,10 +19,18 @@ submit_btn.addEventListener('click', ()=>{
         mediaElement.src = url;
 
         mediaElement.addEventListener('loadedmetadata', function () {
-            var duration = mediaElement.duration;
+            var duration = Math.round(mediaElement.duration);
             console.log('File duration:', duration, 'seconds');
-            $('#msg').text(`Please Wait ${duration} seconds While Extracting Main Points`)
-            $('#msg').show()
+            durationMinute = (duration/60);
+            console.log(durationMinute);
+            if (duration > 60){
+                $('#msg').text(`Please Wait ${durationMinute} minute While Extracting Main Points`)
+                $('#msg').show()
+            }
+            else{
+                $('#msg').text(`Please Wait ${duration} seconds While Extracting Main Points`)
+                $('#msg').show()
+            }
         });
     }
 })
@@ -38,7 +46,8 @@ window.addEventListener('load', ()=>{
 
 submit_btn.addEventListener('click', ()=>{
     console.log('button click')
-    
+    $('#msg').text("Please Wait Processing To Extract Main Points")
+    $('#msg').show()
     
 })
 

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 class AudioFile(models.Model):
 
@@ -10,3 +10,4 @@ class Audio_File_Data(models.Model):
     file_name = models.CharField(max_length=100, blank=True, null=True)
     main_points = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

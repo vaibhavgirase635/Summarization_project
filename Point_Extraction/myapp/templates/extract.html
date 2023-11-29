@@ -15,11 +15,24 @@
         div{
             margin-top: 50px;
         }
-        
+        #logout_btn{
+            margin-left: 1100px;
+            
+        }
+        h3{
+            margin-left: 1040px;
+        }
     </style>
 </head>
 <body>
+    
     <div class="container">
+        {% if user.is_authenticated %}
+
+        <h3>{{user.first_name}}{{user.last_name}}</h3>
+        
+        <a id='logout_btn' href="{% url 'logout' %}" class="btn btn-danger">LOGOUT</a>
+        {% endif %}
         <div class="row">
             <div class="col-sm-6">
                 <h2>Summarize Your Text</h2>
