@@ -10,7 +10,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body{
-            background-color: burlywood;
+            background-color: grey;
+            font-family: 'Arial', sans-serif;
         }
         div{
             margin-top: 50px;
@@ -19,20 +20,51 @@
             margin-left: 1100px;
             
         }
-        h3{
-            margin-left: 1040px;
+        h5{
+            margin-left: 1200px;
+        }
+        .myButton {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .myButton:hover{
+            background-color: black;
+            color: green;
+        }
+        #fileform{
+            margin-left: 100px;
+        }
+        
+        span{
+            margin-left: 1240px;
+        }
+        footer {
+            background-color: green; /* Dark background color */
+            color: #fff; /* Light text color */
+            padding: 20px; /* Add padding for better visual appeal */
+            text-align: center; /* Center-align text */
+        }
+        #meeting{
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    
-    <div class="container">
-        {% if user.is_authenticated %}
-
-        <h3>{{user.first_name}}{{user.last_name}}</h3>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a href="#" class="navbar-brand">
+          <img src="static/images/logo_default.png" alt="">
+        </a>
+        <ul class="nav justify-content-end">
+          <li class="nav-item"><a href="{% url 'logout' %}" class="btn btn-outline-success me-2">Logout</a></li>
+          <li class="nav-item"><a href="{% url 'audio_files' %}" class="btn btn-outline-info me-2">Audio File History</a></li>
+        </ul> 
         
-        <a id='logout_btn' href="{% url 'logout' %}" class="btn btn-danger">LOGOUT</a>
-        {% endif %}
+    </nav>
+    {% if user.is_authenticated %}
+            <h4><span class="fa-dark fab far fa-user"></span></h4>
+            <h5>{{user.first_name}}{{user.last_name}}</h5>
+    {% endif %}
+    <div class="container">
+        
         <div class="row">
             <div class="col-sm-6">
                 <h2>Summarize Your Text</h2>
@@ -40,17 +72,18 @@
                     {% csrf_token %}
                     <label for="query">Enter Text:</label><br>
                     <textarea name="query" id="query" cols="70" rows="10"></textarea><br>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-outline-primary myButton">Submit</button>
                 </form><br>
             </div>
             <div class="col-sm-6">
                 <h2>Upload Meeting Recordings To Extract Main Points</h2><br>
-                <a href="{% url 'audio_files' %}" class="btn btn-info">Audio Files History</a><br><br>
                 
-                <form action="{% url 'from_recordings' %}" method="post" enctype="multipart/form-data">  
+                
+                <form id="fileform" action="{% url 'from_recordings' %}" method="post" enctype="multipart/form-data">  
                     {% csrf_token %}
-                    <input type="file" id="input-file" name="file" accept=".mp3, .mp4, .mkv"><br><br>
-                    <button id="submit-btn" type="submit" class="btn btn-danger">Submit</button>
+                    <label for="input-file" class="form-lable">Audio File:</label>
+                    <input class="form-control form-control-lg" type="file" id="input-file" name="file" accept=".mp3, .mp4, .mkv"><br><br>
+                    <button id="submit-btn" type="submit" class="btn btn-outline-danger myButton">Submit</button>
                     <br><br>
                 </form> 
                 <br>
@@ -71,13 +104,16 @@
             </div>
             
         </div>
-        <div class="text-center mt-5 d-grid gap-2">
+        <div id="meeting" class="text-center mt-5 d-grid gap-2">
             <h2 class="text-center mt-5">Start Your Meeting To Extract Main Points</h2>
-            <button id="start-btn" class="btn btn-danger" type="button">Start Listening</button>
+            <button id="start-btn" class="btn btn-danger myButton" type="button">Start Listening</button>
             
-            <button id="extract_btn" class="btn btn-danger" type="button">Stop</button>
+            <button id="extract_btn" class="btn btn-danger myButton" type="button">Stop</button>
         </div>
     </div>
+    <footer>
+        <p>&copy; 2023 Your Website Name. All rights reserved.</p>
+    </footer>
     <script src="/static/app.js"></script>
     
 </body>
